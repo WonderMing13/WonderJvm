@@ -27,7 +27,11 @@ public class EventWeaver extends ClassVisitor implements Opcodes {
                 loadArgArray();
                 dup();
                 invokeStatic(ASM_TYPE_SPY,ASM_SPY_METHOD_CALL_BEFORE);
+            }
 
+            @Override
+            public void visitMethodInsn(int opcodeAndSource, String owner, String name, String descriptor, boolean isInterface) {
+                super.visitMethodInsn(opcodeAndSource, owner, name, descriptor, isInterface);
             }
 
             @Override

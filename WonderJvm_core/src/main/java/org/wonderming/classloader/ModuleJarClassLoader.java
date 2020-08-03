@@ -1,5 +1,7 @@
 package org.wonderming.classloader;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
@@ -8,12 +10,27 @@ import java.net.URLClassLoader;
  **/
 public class ModuleJarClassLoader extends URLClassLoader {
 
-    public ModuleJarClassLoader(URL[] urls) {
-        super(urls);
+    public ModuleJarClassLoader(File moduleJarFile) throws MalformedURLException {
+        super(new URL[]{new URL("file:" + moduleJarFile.getPath())});
     }
 
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        return super.loadClass(name, resolve);
+        //试着去寻找该类是否被加载过
+        final Class<?> loadedClass = findLoadedClass(name);
+        if (loadedClass != null){
+            return loadedClass;
+        }
+        try {
+            //直接从该ClassLoader去加载 不需要去直接使用父类加载器 不是用一个类加载器加载时 equals会报错 :)
+            final Class<?> aClass = findClass(name);
+            if (resolve){
+                resolveClass(aClass);
+            }
+            return aClass;
+        }catch (Exception e){
+            //如果走到这一步 说明即使破坏双亲委派机制依旧没法加载到该类 又得乖乖让父类加载器去加载
+            return super.loadClass(name,resolve);
+        }
     }
 }

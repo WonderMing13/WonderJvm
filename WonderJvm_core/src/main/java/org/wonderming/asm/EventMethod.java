@@ -14,7 +14,6 @@ public class EventMethod extends AdviceAdapter implements Opcodes {
 
     private final Type[] argumentTypeArray;
 
-
     protected EventMethod(MethodVisitor mv, int access, String name, String desc) {
         super(ASM7, mv, access, name, desc);
         this.argumentTypeArray = Type.getArgumentTypes(desc);

@@ -12,4 +12,8 @@ public class CoreServerConfigure {
     public final static String SERVER_IP = "server.ip";
 
     public final static String SERVER_PORT = "server.port";
+
+    public final static String SYSTEM_MODULE = "system.module";
+
+    public final static String USER_MODULE = "user.module";
 }

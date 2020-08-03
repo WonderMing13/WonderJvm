@@ -54,7 +54,7 @@ public class AgentLauncher {
             final Boolean isBind = (Boolean) nettyCoreServer.getMethod("isBind").invoke(coreServerInstance);
             if (!isBind){
                 //没有绑定啊 那就启动Netty咯
-                nettyCoreServer.getMethod("bind",Map.class).invoke(coreServerInstance,toArgsMap);
+                nettyCoreServer.getMethod("bind",Map.class,Instrumentation.class).invoke(coreServerInstance,toArgsMap,inst);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -85,9 +85,9 @@ public class AgentLauncher {
 
     public final static String NAME_SPACE = "namespace";
 
-    public final static String SYSTEM_MODULE = "system-module";
+    public final static String SYSTEM_MODULE = "system.module";
 
-    public final static String USER_MODULE = "user-module";
+    public final static String USER_MODULE = "user.module";
 
     private static final ReentrantReadWriteLock RW = new ReentrantReadWriteLock();
 

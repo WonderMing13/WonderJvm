@@ -1,5 +1,6 @@
 package org.wonderming.server;
 
+import java.lang.instrument.Instrumentation;
 import java.net.InetSocketAddress;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ public interface CoreServer {
     /**
      * 绑定
      */
-    public void bind(Map<String, String> argsMap);
+    public void bind(Map<String, String> argsMap,final Instrumentation inst);
 
     /**
      * 注销CoreServer

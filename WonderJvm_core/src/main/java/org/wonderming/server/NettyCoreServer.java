@@ -13,9 +13,15 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
+import org.wonderming.manager.CoreModuleManager;
+import org.wonderming.manager.impl.DefaultCoreModuleManager;
 import org.wonderming.model.CoreServerConfigure;
+import org.wonderming.model.JvmModel;
 import org.wonderming.server.handler.HttpServerHandler;
+import org.wonderming.utils.JavaInstanceUtil;
+import org.wonderming.utils.JavaMethodUtil;
 
+import java.lang.instrument.Instrumentation;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.Executors;
@@ -79,6 +85,11 @@ public class NettyCoreServer implements CoreServer{
      */
     private static volatile CoreServer coreServer;
 
+    /**
+     * JvmModel实例
+     */
+    private JvmModel jvmModel;
+
     public synchronized static CoreServer getInstance() {
         if (null == coreServer){
             synchronized (CoreServer.class){
@@ -98,9 +109,16 @@ public class NettyCoreServer implements CoreServer{
         SERVERBOOTSTRAP.channel(NioServerSocketChannel.class);
     }
 
-    private void init(Map<String, String> argsMap) {
+    private void init(Map<String, String> argsMap,Instrumentation inst) {
         //命名空间
         final String namespace = argsMap.get(CoreServerConfigure.NAME_SPACE);
+        //system-module的主目录路径
+        final String systemModulePath = argsMap.get(CoreServerConfigure.SYSTEM_MODULE);
+        //user-module的主目录路径
+        final String userModulePath = argsMap.get(CoreServerConfigure.USER_MODULE);
+        jvmModel = new JvmModel(systemModulePath,userModulePath,inst);
+        //重置module列表
+        jvmModel.getCoreModuleManager().reset();
         SERVERBOOTSTRAP.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel channel){
@@ -125,11 +143,11 @@ public class NettyCoreServer implements CoreServer{
     }
 
     @Override
-    public synchronized void bind(Map<String, String> argsMap) {
+    public synchronized void bind(Map<String, String> argsMap,final Instrumentation inst) {
         final String ip = argsMap.get(CoreServerConfigure.SERVER_IP);
         final String port = argsMap.get(CoreServerConfigure.SERVER_PORT);
         final InetSocketAddress socketAddress = new InetSocketAddress(ip, Integer.parseInt(port));
-        init(argsMap);
+        init(argsMap,inst);
         channelFuture = SERVERBOOTSTRAP.bind(socketAddress).addListener(future -> BIND_FLAG = future.isSuccess());
     }
 
@@ -146,5 +164,6 @@ public class NettyCoreServer implements CoreServer{
             WORK.shutdownGracefully();
         }
     }
+
 
 }

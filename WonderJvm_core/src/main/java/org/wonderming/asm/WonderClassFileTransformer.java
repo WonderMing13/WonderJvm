@@ -3,6 +3,7 @@ package org.wonderming.asm;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.wonderming.asm.EventWeaver;
+import org.wonderming.manager.EventListener;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
@@ -13,6 +14,8 @@ import java.security.ProtectionDomain;
  * @author wangdeming
  **/
 public class WonderClassFileTransformer implements ClassFileTransformer {
+
+    private EventListener eventListener;
 
     @Override
     public byte[] transform(ClassLoader loader,
