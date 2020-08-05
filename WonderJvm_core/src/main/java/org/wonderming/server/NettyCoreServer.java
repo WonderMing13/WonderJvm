@@ -116,6 +116,7 @@ public class NettyCoreServer implements CoreServer{
         final String systemModulePath = argsMap.get(CoreServerConfigure.SYSTEM_MODULE);
         //user-module的主目录路径
         final String userModulePath = argsMap.get(CoreServerConfigure.USER_MODULE);
+        //实例化JvmModel
         jvmModel = new JvmModel(systemModulePath,userModulePath,inst);
         //重置module列表
         jvmModel.getCoreModuleManager().reset();
@@ -130,7 +131,7 @@ public class NettyCoreServer implements CoreServer{
                         //将http消息的多个部分组合成一条完整的HTTP消息
                         .addLast(new HttpObjectAggregator(65535))
                         //三次握手协议的Http请求 处理token保存channel
-                        .addLast("HttpServerHandler", new HttpServerHandler(namespace))
+                        .addLast("HttpServerHandler", new HttpServerHandler(namespace,jvmModel.getCoreModuleManager()))
                         //netty使用websocket协议
                         .addLast("WebSocketServerProtocolHandler", new WebSocketServerProtocolHandler(namespace));
             }

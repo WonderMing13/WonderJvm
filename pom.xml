@@ -16,6 +16,7 @@
         <module>WonderJvm_agent</module>
         <module>WonderJvm_module</module>
         <module>WonderJvm_common-api</module>
+        <module>WonderJvm_test</module>
     </modules>
 
     <properties>
@@ -101,6 +102,13 @@
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
             </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>org.kohsuke.metainf-services</groupId>-->
+<!--                <artifactId>metainf-services</artifactId>-->
+<!--                <version>1.7</version>-->
+<!--                <scope>compile</scope>-->
+<!--            </dependency>-->
         </dependencies>
     </dependencyManagement>
 

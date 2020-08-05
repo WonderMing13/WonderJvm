@@ -24,6 +24,8 @@ public interface CoreModuleManager {
      */
     public void unload(CoreModuleModel coreModuleModel);
 
+    public CoreModuleModel get(String moduleId);
+
 
 
 }

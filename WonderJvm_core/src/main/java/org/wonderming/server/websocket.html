@@ -4,7 +4,7 @@
     var socket;
     if(window.WebSocket){
         // socket = new WebSocket("ws://localhost:8010/webws?token=eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjY4Mjg5NTcxMjkyODY2MTUxOSwiaXNzIjoidGVtcGxlIiwiYXVkIjoiNjgyODk1NzEyOTI4NjYxNTE5Iiwic3ViIjoiNjgyODk1NzEyOTI4NjYxNTE5IiwiZXhwIjoxNTg1Mjk1ODQ0LCJuYmYiOjE1ODM5OTk4NDR9.md3Zq3U0WsbokYW6xvKCpfbDWfGVW6dhq5dO8WCqcmc");
-        socket = new WebSocket("ws://localhost:8010/ws");
+        socket = new WebSocket("ws://localhost:8010/ws?path=/hjp/xjx");
 
         socket.onmessage = function (event) {
 

@@ -102,8 +102,6 @@ public class CoreModuleModel {
     }
 
 
-
-
     public CoreModuleModel(String moduleId, File moduleJarFile, Module module,ModuleJarClassLoader moduleJarClassLoader) {
         this.moduleId = moduleId;
         this.moduleJarFile = moduleJarFile;

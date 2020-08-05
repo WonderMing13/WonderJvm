@@ -56,8 +56,8 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
     private File[] getAllModuleFileArray(){
         final LinkedHashSet<File> files = new LinkedHashSet<>();
         //system-module下的module文件
-        final File file = new File(this.systemModulePath);
-        files.add(file);
+//        final File file = new File(this.systemModulePath);
+//        files.add(file);
         //user-module下的所有user-module文件 不递归
         files.addAll(FileUtils.listFiles(new File(this.userModulePath),new String[]{"jar"},false));
         return files.toArray(new File[]{});
@@ -73,27 +73,27 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
         }
         final Module module = coreModuleModel.getModule();
         //获取@Resource注解的
-        final List<Field> fieldsListWithAnnotation = FieldUtils.getFieldsListWithAnnotation(module.getClass(), Resource.class);
-        fieldsListWithAnnotation.forEach(field -> {
-            //instanceof是儿子找父亲 isAssignableFrom是父亲找儿子
-            if (CoreModuleEventWatcher.class.isAssignableFrom(field.getType())){
-                final CoreModuleEventWatcher coreModuleEventWatcher = coreModuleModel.addReleaseAbleResource(
-                        new CoreModuleModel.BaseReleaseAbleResource<CoreModuleEventWatcher>(
-                                JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleEventWatcher.class, new DefaultCoreModuleEventWatcher())) {
-                            @Override
-                            public void release() {
-                                logger.info("release resource");
-                            }
-                        });
-                if (coreModuleEventWatcher != null){
-                    try {
-                        writeField(field,module,coreModuleEventWatcher,true);
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-        });
+//        final List<Field> fieldsListWithAnnotation = FieldUtils.getFieldsListWithAnnotation(module.getClass(), Resource.class);
+//        fieldsListWithAnnotation.forEach(field -> {
+//            //instanceof是儿子找父亲 isAssignableFrom是父亲找儿子
+//            if (CoreModuleEventWatcher.class.isAssignableFrom(field.getType())){
+//                final CoreModuleEventWatcher coreModuleEventWatcher = coreModuleModel.addReleaseAbleResource(
+//                        new CoreModuleModel.BaseReleaseAbleResource<CoreModuleEventWatcher>(
+//                                JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleEventWatcher.class, new DefaultCoreModuleEventWatcher())) {
+//                            @Override
+//                            public void release() {
+//                                logger.info("release resource");
+//                            }
+//                        });
+//                if (coreModuleEventWatcher != null){
+//                    try {
+//                        writeField(field,module,coreModuleEventWatcher,true);
+//                    } catch (IllegalAccessException e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//            }
+//        });
         //注册到模块中
         LOAD_CORE_MODULE_CONFIGURE_MAP.put(coreModuleModel.getModuleId(),coreModuleModel);
     }
@@ -154,5 +154,10 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
         coreModuleModel.doReleaseAllResource();
         //关闭ClassLoader
         closeModuleJarClassLoaderIfNecessity(coreModuleModel.getModuleJarClassLoader());
+    }
+
+    @Override
+    public CoreModuleModel get(String moduleId) {
+        return LOAD_CORE_MODULE_CONFIGURE_MAP.get(moduleId);
     }
 }
