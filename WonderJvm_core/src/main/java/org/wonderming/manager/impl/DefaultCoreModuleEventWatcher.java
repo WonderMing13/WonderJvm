@@ -1,7 +1,6 @@
 package org.wonderming.manager.impl;
 
 import org.wonderming.manager.CoreModuleEventWatcher;
-import org.wonderming.manager.EventListener;
 
 /**
  * @author wangdeming
@@ -9,7 +8,7 @@ import org.wonderming.manager.EventListener;
 public class DefaultCoreModuleEventWatcher implements CoreModuleEventWatcher {
 
     @Override
-    public void watch(EventListener eventListener) {
+    public void watch() {
 
     }
 }

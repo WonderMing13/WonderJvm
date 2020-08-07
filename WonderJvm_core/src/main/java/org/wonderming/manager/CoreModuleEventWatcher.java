@@ -5,5 +5,5 @@ package org.wonderming.manager;
  **/
 public interface CoreModuleEventWatcher {
 
-    public void watch(EventListener eventListener);
+    public void watch();
 }

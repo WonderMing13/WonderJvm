@@ -16,26 +16,6 @@ import java.util.Enumeration;
  **/
 public class ModuleJarClassLoader extends URLClassLoader {
 
-    @Override
-    public URL getResource(String name) {
-        URL url = findResource(name);
-        if (null != url) {
-            return url;
-        }
-        url = super.getResource(name);
-        return url;
-    }
-
-    @Override
-    public Enumeration<URL> getResources(String name) throws IOException {
-        Enumeration<URL> urls = findResources(name);
-        if (null != urls) {
-            return urls;
-        }
-        urls = super.getResources(name);
-        return urls;
-    }
-
     public ModuleJarClassLoader(File moduleJarFile) throws MalformedURLException {
         super(new URL[]{new URL("file:" + moduleJarFile.getPath())});
         Logger logger = LoggerFactory.getLogger(ModuleJarClassLoader.class);

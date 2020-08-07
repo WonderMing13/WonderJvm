@@ -38,6 +38,7 @@
         <profile>
             <id>default</id>
             <properties>
+                <!--BootstrapClassLoader加载-->
                 <tools-jar>${java.home}/../lib/tools.jar</tools-jar>
             </properties>
             <activation>

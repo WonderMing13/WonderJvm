@@ -57,7 +57,7 @@ public class DefaultCoreModuleJarLoader implements CoreModuleJarLoader {
                     final Class<? extends Module> moduleClass = module.getClass();
                     final Information information = moduleClass.getAnnotation(Information.class);
                     final String moduleId = information.moduleId();
-                    System.out.println(moduleId);
+                    logger.info("find moduleId:{}",moduleId);
                     //检验moduleId
                     if (StringUtils.isBlank(moduleId)){
                         logger.warn("loading module instance error:@Information id is missing,class={};module-jar={}",

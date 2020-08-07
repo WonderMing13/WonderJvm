@@ -40,6 +40,7 @@ public class SocketServerHandler extends SimpleChannelInboundHandler<TextWebSock
             final boolean methodAccessible = method.isAccessible();
             try {
                 method.setAccessible(true);
+                //绕过类加载器的双亲委派模型
                 Thread.currentThread().setContextClassLoader(coreModuleModel.getModuleJarClassLoader());
                 method.invoke(module, (Object[]) method.getParameterTypes());
             }finally {
