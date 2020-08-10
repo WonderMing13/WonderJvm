@@ -6,7 +6,7 @@ package org.wonderming.utils;
  **/
 public class LazyLoadUtil {
 
-    public abstract class BaseLazyLoad<T> {
+    public static abstract class BaseLazyLoad<T> {
 
         private volatile boolean initFlag = false;
 
@@ -22,6 +22,6 @@ public class LazyLoadUtil {
             initFlag = true;
             return object;
         }
-
     }
+
 }
