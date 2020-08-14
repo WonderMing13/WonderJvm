@@ -1,5 +1,6 @@
 package org.wonderming.manager;
 
+
 import org.wonderming.manager.structure.MethodStructure;
 
 import java.util.HashSet;

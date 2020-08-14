@@ -6,8 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.wonderming.Module;
 import org.wonderming.classloader.ModuleJarClassLoader;
-import org.wonderming.manager.CoreModuleEventWatcher;
+import org.wonderming.CoreModuleEventWatcher;
 import org.wonderming.manager.CoreModuleJarLoader;
+import org.wonderming.manager.CoreModuleLoadedClassManager;
 import org.wonderming.manager.CoreModuleManager;
 import org.wonderming.model.CoreModuleModel;
 import org.wonderming.utils.JavaInstanceUtil;
@@ -36,13 +37,17 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
 
     private final String userModulePath;
 
+    private final CoreModuleLoadedClassManager coreModuleLoadedClassManager;
+
     public DefaultCoreModuleManager(Instrumentation inst,
                                     String systemModulePath,
-                                    String userModulePath) {
+                                    String userModulePath,
+                                    CoreModuleLoadedClassManager coreModuleLoadedClassManager) {
         this.inst = inst;
         this.systemModulePath = systemModulePath;
         this.userModulePath = userModulePath;
         this.moduleFileArray = getAllModuleFileArray();
+        this.coreModuleLoadedClassManager = coreModuleLoadedClassManager;
     }
 
     private final static Map<String, CoreModuleModel> LOAD_CORE_MODULE_CONFIGURE_MAP = new HashMap<>();
@@ -73,27 +78,28 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
         }
         final Module module = coreModuleModel.getModule();
         //获取@Resource注解的
-//        final List<Field> fieldsListWithAnnotation = FieldUtils.getFieldsListWithAnnotation(module.getClass(), Resource.class);
-//        fieldsListWithAnnotation.forEach(field -> {
-//            //instanceof是儿子找父亲 isAssignableFrom是父亲找儿子
-//            if (CoreModuleEventWatcher.class.isAssignableFrom(field.getType())){
-//                final CoreModuleEventWatcher coreModuleEventWatcher = coreModuleModel.addReleaseAbleResource(
-//                        new CoreModuleModel.BaseReleaseAbleResource<CoreModuleEventWatcher>(
-//                                JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleEventWatcher.class, new DefaultCoreModuleEventWatcher())) {
-//                            @Override
-//                            public void release() {
-//                                logger.info("release resource");
-//                            }
-//                        });
-//                if (coreModuleEventWatcher != null){
-//                    try {
-//                        writeField(field,module,coreModuleEventWatcher,true);
-//                    } catch (IllegalAccessException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            }
-//        });
+        final List<Field> fieldsListWithAnnotation = FieldUtils.getFieldsListWithAnnotation(module.getClass(), Resource.class);
+        fieldsListWithAnnotation.forEach(field -> {
+            //instanceof是儿子找父亲 isAssignableFrom是父亲找儿子
+            if (CoreModuleEventWatcher.class.isAssignableFrom(field.getType())){
+                final CoreModuleEventWatcher coreModuleEventWatcher = coreModuleModel.addReleaseAbleResource(
+                        new CoreModuleModel.BaseReleaseAbleResource<CoreModuleEventWatcher>(
+                                JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleEventWatcher.class,
+                                        new DefaultCoreModuleEventWatcher(coreModuleLoadedClassManager,inst))) {
+                            @Override
+                            public void release() {
+                                logger.info("release resource");
+                            }
+                        });
+                if (coreModuleEventWatcher != null){
+                    try {
+                        writeField(field,module,coreModuleEventWatcher,true);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
         //注册到模块中
         LOAD_CORE_MODULE_CONFIGURE_MAP.put(coreModuleModel.getModuleId(),coreModuleModel);
     }

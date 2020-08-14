@@ -24,6 +24,11 @@ public interface CoreModuleManager {
      */
     public void unload(CoreModuleModel coreModuleModel);
 
+    /**
+     * 根据moduleId获取模块
+     * @param moduleId String 模块Id
+     * @return CoreModuleModel 模块的实体类
+     */
     public CoreModuleModel get(String moduleId);
 
 

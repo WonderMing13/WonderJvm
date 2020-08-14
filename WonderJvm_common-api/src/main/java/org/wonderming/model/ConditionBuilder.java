@@ -1,5 +1,7 @@
 package org.wonderming.model;
 
+import org.wonderming.CoreModuleEventWatcher;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,42 @@ import java.util.List;
  * @author wangdeming
  **/
 public class ConditionBuilder {
+
+    private final static List<BuildingForClass> BUILDING_FOR_CLASS_LIST = new ArrayList<>();
+
+    private final CoreModuleEventWatcher coreModuleEventWatcher;
+
+    public ConditionBuilder(CoreModuleEventWatcher coreModuleEventWatcher) {
+        this.coreModuleEventWatcher = coreModuleEventWatcher;
+    }
+
+    public CoreModuleEventWatcher getCoreModuleEventWatcher() {
+        return coreModuleEventWatcher;
+    }
+
+    /**
+     * 模版匹配类名称(包含包名)
+     * <p>
+     * 例子：
+     * <ul>
+     * <li>"java.util.ArrayList"</li>
+     * </ul>
+     * </p>
+     *
+     * @param pattern 类名匹配模版
+     * @return IBuildingForClass
+     */
+    public IBuildingForClass onClass(final String pattern) {
+        final BuildingForClass buildingForClass = new BuildingForClass(pattern);
+        BUILDING_FOR_CLASS_LIST.add(buildingForClass);
+        return buildingForClass;
+    }
+
+
+    public IBuildingForWatch build(){
+        return new BuildingForWatch(100);
+    }
+
 
     public interface IBuildingForClass{
 
@@ -42,29 +80,20 @@ public class ConditionBuilder {
          * @return IBuildingForMethod
          */
         IBuildingForMethod onNextMethod(String pattern);
+
+        /**
+         * 监听方法
+         * @return BuildingForWatch
+         */
+        IBuildingForWatch onWatch();
     }
 
-    List<IBuildingForClass> buildingForClassList = new ArrayList<>();
+    public interface IBuildingForWatch{
 
-    /**
-     * 模版匹配类名称(包含包名)
-     * <p>
-     * 例子：
-     * <ul>
-     * <li>"com.alibaba.*"</li>
-     * <li>"java.util.ArrayList"</li>
-     * </ul>
-     *
-     * @param pattern 类名匹配模版
-     * @return IBuildingForClass
-     */
-    public IBuildingForClass onClass(final String pattern) {
-        final IBuildingForClass buildingForClass = new BuildingForClass(pattern);
-        buildingForClassList.add(buildingForClass);
-        return buildingForClass;
+        IBuildingForWatch toCondition();
     }
 
-    private static class BuildingForClass implements IBuildingForClass {
+    public class BuildingForClass implements IBuildingForClass {
 
         private final String pattern;
 
@@ -72,10 +101,18 @@ public class ConditionBuilder {
 
         private boolean isIncludeBootstrap = false;
 
-        private final List<IBuildingForMethod> buildingForMethodList = new ArrayList<>();
+        private final List<BuildingForMethod> buildingForMethodList = new ArrayList<>();
 
         public BuildingForClass(String pattern) {
             this.pattern = pattern;
+        }
+
+        public List<BuildingForMethod> getBuildingForMethodList() {
+            return buildingForMethodList;
+        }
+
+        public String getPattern() {
+            return pattern;
         }
 
         @Override
@@ -92,23 +129,14 @@ public class ConditionBuilder {
 
         @Override
         public IBuildingForMethod onMethod(String pattern) {
-            final IBuildingForMethod buildingForMethod = new BuildingForMethod(this, pattern);
+            final BuildingForMethod buildingForMethod = new BuildingForMethod(this, pattern);
             buildingForMethodList.add(buildingForMethod);
             return buildingForMethod;
         }
 
-        @Override
-        public String toString() {
-            return "BuildingForClass{" +
-                    "pattern='" + pattern + '\'' +
-                    ", isIncludeSubClasses=" + isIncludeSubClasses +
-                    ", isIncludeBootstrap=" + isIncludeBootstrap +
-                    ", buildingForMethodList=" + buildingForMethodList +
-                    '}';
-        }
     }
 
-    private static class BuildingForMethod implements IBuildingForMethod {
+    public class BuildingForMethod implements IBuildingForMethod {
 
         private final BuildingForClass bfClass;
 
@@ -119,18 +147,36 @@ public class ConditionBuilder {
             this.pattern = pattern;
         }
 
+        public String getPattern() {
+            return pattern;
+        }
+
         @Override
         public IBuildingForMethod onNextMethod(String pattern) {
              return bfClass.onMethod(pattern);
         }
 
         @Override
-        public String toString() {
-            return "BuildingForMethod{" +
-                    "bfClass=" + bfClass +
-                    ", pattern='" + pattern + '\'' +
-                    '}';
+        public IBuildingForWatch onWatch() {
+            return build();
         }
+
+    }
+
+    private class BuildingForWatch implements IBuildingForWatch{
+
+        private final int watchId;
+
+        public BuildingForWatch(int watchId) {
+            this.watchId = watchId;
+        }
+
+        @Override
+        public IBuildingForWatch toCondition(){
+            coreModuleEventWatcher.watch(BUILDING_FOR_CLASS_LIST);
+            return this;
+        }
+
     }
 
 

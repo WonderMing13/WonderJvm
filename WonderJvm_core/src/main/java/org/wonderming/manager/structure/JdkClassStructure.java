@@ -177,7 +177,6 @@ public class JdkClassStructure extends BaseClassStructure {
             if (annotation.getClass().isAnnotation()){
                 annotationTypes.add(annotation.getClass());
             }
-
             for (Class<?> annotationInterfaceClass:annotation.getClass().getInterfaces()) {
                 if (annotationInterfaceClass.isAnnotation()){
                     annotationTypes.add(annotationInterfaceClass);
@@ -187,6 +186,11 @@ public class JdkClassStructure extends BaseClassStructure {
         return annotationTypes.toArray(new Class[0]);
     }
 
+    /**
+     * 获取Java的全类名
+     * @param clazz Class<?> 被拦截的类
+     * @return String
+     */
     private String getJavaClassName(Class<?> clazz) {
         if (clazz.isArray()) {
             return getJavaClassName(clazz.getComponentType()) + "[]";

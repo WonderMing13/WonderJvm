@@ -2,6 +2,9 @@ package org.wonderming;
 
 import org.wonderming.annotation.Command;
 import org.wonderming.annotation.Information;
+import org.wonderming.model.ConditionBuilder;
+
+import javax.annotation.Resource;
 
 /**
  * @author wangdeming
@@ -9,8 +12,15 @@ import org.wonderming.annotation.Information;
 @Information(moduleId = "hjp",authorName = "WonderMing")
 public class TestMain implements Module{
 
+    @Resource
+    private CoreModuleEventWatcher coreModuleEventWatcher;
+
     @Command(methodValue = "/xjx")
     public void test(){
-        System.out.println("I am wonder");
+        new ConditionBuilder(coreModuleEventWatcher)
+                .onClass("org.wonderming.Test")
+                .onMethod("ok")
+                .onWatch()
+                .toCondition();
     }
 }

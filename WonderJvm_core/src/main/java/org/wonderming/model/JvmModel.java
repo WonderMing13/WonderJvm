@@ -1,6 +1,7 @@
 package org.wonderming.model;
 
 import org.wonderming.manager.CoreModuleManager;
+import org.wonderming.manager.impl.DefaultCoreLoadedClassSource;
 import org.wonderming.manager.impl.DefaultCoreModuleManager;
 import org.wonderming.utils.JavaInstanceUtil;
 
@@ -23,8 +24,12 @@ public class JvmModel{
         this.userModulePath = userModulePath;
         this.inst = inst;
         //执行默认的构造函数
-        this.coreModuleManager = JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleManager.class,
-                new DefaultCoreModuleManager(inst,systemModulePath,userModulePath));
+        this.coreModuleManager = JavaInstanceUtil.INSTANCE.protectProxy(
+                CoreModuleManager.class, new DefaultCoreModuleManager(
+                inst,
+                systemModulePath,
+                userModulePath,
+                new DefaultCoreLoadedClassSource(inst)));
     }
 
     public CoreModuleManager getCoreModuleManager() {
