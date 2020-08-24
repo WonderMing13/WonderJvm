@@ -14,9 +14,9 @@
         <module>WonderJvm_core</module>
         <module>WonderJvm_spy</module>
         <module>WonderJvm_agent</module>
-        <module>WonderJvm_module</module>
         <module>WonderJvm_common-api</module>
         <module>WonderJvm_test</module>
+        <module>WonderJvm_target</module>
     </modules>
 
     <properties>

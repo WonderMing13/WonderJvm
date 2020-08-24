@@ -117,4 +117,15 @@ public abstract class BaseClassStructure implements CoreClassStructure {
     public HashSet<CoreClassStructure> getFamilyTypeClassStructures() {
         return familyTypeClassStructuresLazyLoad.get();
     }
+
+    @Override
+    public int hashCode() {
+        return getJavaClassName().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof CoreClassStructure
+                && getJavaClassName().equals(((CoreClassStructure) obj).getJavaClassName());
+    }
 }

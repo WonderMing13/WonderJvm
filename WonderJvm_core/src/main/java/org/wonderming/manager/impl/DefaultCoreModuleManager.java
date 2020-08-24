@@ -33,6 +33,8 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
 
     private final File[] moduleFileArray;
 
+    private final String namespace;
+
     private final String systemModulePath;
 
     private final String userModulePath;
@@ -40,10 +42,11 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
     private final CoreModuleLoadedClassManager coreModuleLoadedClassManager;
 
     public DefaultCoreModuleManager(Instrumentation inst,
-                                    String systemModulePath,
+                                    String namespace, String systemModulePath,
                                     String userModulePath,
                                     CoreModuleLoadedClassManager coreModuleLoadedClassManager) {
         this.inst = inst;
+        this.namespace = namespace;
         this.systemModulePath = systemModulePath;
         this.userModulePath = userModulePath;
         this.moduleFileArray = getAllModuleFileArray();
@@ -85,7 +88,7 @@ public class DefaultCoreModuleManager implements CoreModuleManager {
                 final CoreModuleEventWatcher coreModuleEventWatcher = coreModuleModel.addReleaseAbleResource(
                         new CoreModuleModel.BaseReleaseAbleResource<CoreModuleEventWatcher>(
                                 JavaInstanceUtil.INSTANCE.protectProxy(CoreModuleEventWatcher.class,
-                                        new DefaultCoreModuleEventWatcher(coreModuleLoadedClassManager,inst))) {
+                                        new DefaultCoreModuleEventWatcher(coreModuleLoadedClassManager,inst, namespace, coreModuleModel))) {
                             @Override
                             public void release() {
                                 logger.info("release resource");

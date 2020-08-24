@@ -4,20 +4,47 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * 藏匿于BootstrapClassLoader的间谍类
  * @author wangdeming
  **/
 public class Spy {
+    /**
+     * 全局序列
+     */
+    private static final AtomicInteger SEQUENCER_EF = new AtomicInteger(1000);
 
+    /**
+     * 记录线程
+     */
     private static final Map<Long,Thread> THREAD_MAP = new ConcurrentHashMap<Long, Thread>();
+
+    public static final ConcurrentHashMap<String, SpyHandler> NAMESPACE_SPY_HANDLER_MAP
+            = new ConcurrentHashMap<String, SpyHandler>();
+
 
     /**
      * 一个方法被调用之前
      */
-    public static SpyOfResult spyMethodCallBefore(Object[] argumentArray){
-        return new SpyOfResult(SpyOfResult.SPY_RESULT_STATE_NOTHING,null);
+    public static SpyOfResult spyMethodCallBefore(Object[] argumentArray,
+                                                  int targetClassLoaderId,
+                                                  int listenerId,
+                                                  String namespace,
+                                                  String targetClassName,
+                                                  String targetMethodName,
+                                                  String targetDes,
+                                                  Object target){
+        final SpyHandler spyHandler = NAMESPACE_SPY_HANDLER_MAP.get(namespace);
+        return spyHandler.handleSpyMethodCallBefore(
+                argumentArray,
+                targetClassLoaderId,
+                listenerId,
+                targetClassName,
+                targetMethodName,
+                targetDes,
+                target);
     }
 
     /**
@@ -117,5 +144,9 @@ public class Spy {
                 THREAD_MAP.remove(vmThread.getId());
             }
         }
+    }
+
+    public static int nextSequence(){
+        return SEQUENCER_EF.getAndIncrement();
     }
 }

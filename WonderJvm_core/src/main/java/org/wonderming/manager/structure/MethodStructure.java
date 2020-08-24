@@ -55,4 +55,14 @@ public class MethodStructure extends MethodMemberStructure{
     public List<CoreClassStructure> getAnnotationTypeClassStructures() {
         return annotationTypeClassStructures;
     }
+
+    @Override
+    public String toString() {
+        return "MethodStructure{" +
+                "returnTypeClassStructure=" + returnTypeClassStructure +
+                ", parameterTypeClassStructures=" + parameterTypeClassStructures +
+                ", exceptionTypeClassStructures=" + exceptionTypeClassStructures +
+                ", annotationTypeClassStructures=" + annotationTypeClassStructures +
+                '}';
+    }
 }

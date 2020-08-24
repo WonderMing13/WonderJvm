@@ -58,7 +58,7 @@ public interface CoreClassStructure {
      *
      * @return 家族父类结构集合
      */
-    LinkedHashSet<CoreClassStructure> getFamilySuperClassStructures();
+     Set<CoreClassStructure> getFamilySuperClassStructures();
 
     /**
      * 获取类的声明接口集合
@@ -77,7 +77,7 @@ public interface CoreClassStructure {
      *
      * @return 家族接口类结构集合
      */
-    HashSet<CoreClassStructure> getFamilyInterfaceClassStructures();
+     Set<CoreClassStructure> getFamilyInterfaceClassStructures();
 
     /**
      * 获取声明元注释的类结构集合
@@ -115,5 +115,5 @@ public interface CoreClassStructure {
      *
      * @return 类型结构集合
      */
-    HashSet<CoreClassStructure> getFamilyTypeClassStructures();
+    Set<CoreClassStructure> getFamilyTypeClassStructures();
 }

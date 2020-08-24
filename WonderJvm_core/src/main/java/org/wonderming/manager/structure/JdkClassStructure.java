@@ -2,6 +2,7 @@ package org.wonderming.manager.structure;
 
 import org.wonderming.manager.CoreAccess;
 import org.wonderming.manager.CoreClassStructure;
+import org.wonderming.manager.access.BaseModifierAccess;
 import org.wonderming.utils.LazyLoadUtil;
 
 import java.lang.annotation.Annotation;
@@ -29,7 +30,9 @@ public class JdkClassStructure extends BaseClassStructure {
 
     @Override
     public String getJavaClassName() {
-        return null != javaClassName ? javaClassName : getJavaClassName(clazz);
+        return null != javaClassName
+                ? javaClassName
+                : (javaClassName = getJavaClassName(clazz));
     }
 
     @Override
@@ -221,5 +224,10 @@ public class JdkClassStructure extends BaseClassStructure {
             }
         }
         return coreClassStructureList;
+    }
+
+    @Override
+    public String toString(){
+        return "JdkClassStructure{" + "javaClassName='" + javaClassName + '\'' +  '}';
     }
 }

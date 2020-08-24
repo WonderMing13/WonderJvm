@@ -32,20 +32,15 @@ public class FilterChain {
     }
 
     public MatchingResult build(FilterModel filterModel, FilterChain filterChain){
-        boolean isComplete = false;
-        if (index == filterList.size()){
-            isComplete = true;
-        }
-
-        if (!isComplete){
+        do {
             final Filter filter = filterList.get(index);
             if (filter.operator(filterModel,filterChain)){
                 index++;
             }else {
-                return filterChain.getMatchingResult();
+                break;
             }
-        }
-        return null;
+        }while (index != filterList.size());
+        return filterChain.getMatchingResult();
     }
 
 }

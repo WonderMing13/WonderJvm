@@ -7,12 +7,20 @@ import java.lang.reflect.Method;
  **/
 public class JavaMethodUtil {
 
-    public static Method getDeclaredJavaMethod(Class<?> clazz,String methodName,Class<?>... parameterClassArray){
+    public static Method getDeclaredJavaMethod(Class<?> clazz,
+                                               String methodName,
+                                               Class<?>... parameterClassArray){
         try {
             return clazz.getDeclaredMethod(methodName,parameterClassArray);
         } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+            throw new UnCaughtException(e);
         }
-        return null;
+    }
+
+    public static class UnCaughtException extends RuntimeException {
+
+        public UnCaughtException(Throwable cause) {
+            super(cause);
+        }
     }
 }

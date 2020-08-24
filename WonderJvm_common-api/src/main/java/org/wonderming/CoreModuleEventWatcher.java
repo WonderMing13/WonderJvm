@@ -1,5 +1,6 @@
 package org.wonderming;
 
+import org.wonderming.model.AdviceListener;
 import org.wonderming.model.ConditionBuilder;
 
 import java.util.List;
@@ -9,5 +10,5 @@ import java.util.List;
  **/
 public interface CoreModuleEventWatcher {
 
-    public void watch(List<ConditionBuilder.BuildingForClass> buildingForClassList);
+    public void watch(AdviceListener adviceListener,List<ConditionBuilder.BuildingForClass> buildingForClassList);
 }

@@ -13,19 +13,13 @@ import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import io.netty.handler.stream.ChunkedWriteHandler;
-import org.wonderming.manager.CoreModuleManager;
-import org.wonderming.manager.impl.DefaultCoreModuleManager;
 import org.wonderming.model.CoreServerConfigure;
 import org.wonderming.model.JvmModel;
 import org.wonderming.server.handler.HttpServerHandler;
-import org.wonderming.utils.JavaInstanceUtil;
-import org.wonderming.utils.JavaMethodUtil;
 
 import java.lang.instrument.Instrumentation;
 import java.net.InetSocketAddress;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
@@ -119,7 +113,7 @@ public class NettyCoreServer implements CoreServer{
         //user-module的主目录路径
         final String userModulePath = argsMap.get(CoreServerConfigure.USER_MODULE);
         //实例化JvmModel
-        jvmModel = new JvmModel(systemModulePath,userModulePath,inst);
+        jvmModel = new JvmModel(systemModulePath,userModulePath, namespace, inst);
         //重置module列表
         jvmModel.getCoreModuleManager().reset();
         SERVERBOOTSTRAP.childHandler(new ChannelInitializer<SocketChannel>() {

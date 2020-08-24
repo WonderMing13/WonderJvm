@@ -1,6 +1,7 @@
 package org.wonderming.manager;
 
 import org.wonderming.model.ConditionBuilder;
+import org.wonderming.model.FilterModel;
 
 import java.util.List;
 import java.util.Set;

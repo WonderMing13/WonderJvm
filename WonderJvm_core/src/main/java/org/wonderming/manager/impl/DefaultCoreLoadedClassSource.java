@@ -2,6 +2,7 @@ package org.wonderming.manager.impl;
 
 import org.wonderming.manager.CoreModuleLoadedClassManager;
 import org.wonderming.model.ConditionBuilder;
+import org.wonderming.model.FilterModel;
 
 import java.lang.instrument.Instrumentation;
 import java.util.*;
@@ -29,13 +30,13 @@ public class DefaultCoreLoadedClassSource implements CoreModuleLoadedClassManage
     @Override
     public List<Class<?>> findForReTransform(List<ConditionBuilder.BuildingForClass> buildingForClassList) {
         final List<Class<?>> reTransformClass = new ArrayList<>();
-        buildingForClassList.forEach(buildingForClass -> {
+        for (ConditionBuilder.BuildingForClass buildingForClass : buildingForClassList) {
             for (Class<?> instClass : getAllClassLoadedSet()) {
                 if (buildingForClass.getPattern().equals(instClass.getName())){
                     reTransformClass.add(instClass);
                 }
             }
-        });
+        }
         return reTransformClass;
     }
 }

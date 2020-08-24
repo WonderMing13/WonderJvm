@@ -90,7 +90,7 @@ public class ConditionBuilder {
 
     public interface IBuildingForWatch{
 
-        IBuildingForWatch toCondition();
+        IBuildingForWatch watching(AdviceListener adviceListener);
     }
 
     public class BuildingForClass implements IBuildingForClass {
@@ -172,8 +172,8 @@ public class ConditionBuilder {
         }
 
         @Override
-        public IBuildingForWatch toCondition(){
-            coreModuleEventWatcher.watch(BUILDING_FOR_CLASS_LIST);
+        public IBuildingForWatch watching(AdviceListener adviceListener) {
+            coreModuleEventWatcher.watch(adviceListener,BUILDING_FOR_CLASS_LIST);
             return this;
         }
 
